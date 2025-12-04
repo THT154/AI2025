@@ -1,0 +1,21 @@
+# requirements.txt - Desktop App with MySQL
+mysql-connector-python==8.2.0
+opencv-python==4.8.1.78
+opencv-contrib-python==4.8.1.78
+face-recognition==1.3.0
+deepface==0.0.79
+mtcnn==0.1.1
+tensorflow==2.13.0
+pillow==10.1.0
+numpy==1.24.3
+customtkinter==5.2.1
+CTkMessagebox==2.5
+
+# Nếu dùng PyQt5 thay vì CustomTkinter, uncomment dòng dưới:
+# PyQt5==5.15.10
+
+# Email (optional)
+secure-smtplib==0.1.1
+
+# For date picker in Tkinter
+tkcalendar==1.6.1
