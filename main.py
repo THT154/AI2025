@@ -1,4 +1,4 @@
-# main.py - File chính để chạy ứng dụng Desktop
+# main.py - Entry point với kiến trúc MVC
 import tkinter as tk
 from tkinter import messagebox
 import sys
@@ -7,11 +7,13 @@ import os
 # Thêm thư mục hiện tại vào path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from database import Database
+from models.database import Database
 from config import Config
-from gui.login_window import LoginWindow
+from views.login_window import LoginWindow
 
 class AttendanceApp:
+    """Ứng dụng điểm danh chính với kiến trúc MVC"""
+    
     def __init__(self):
         self.root = tk.Tk()
         self.root.withdraw()  # Ẩn cửa sổ chính ban đầu
@@ -87,7 +89,6 @@ class AttendanceApp:
                 )
         except Exception as e:
             print(f"⚠️ Lỗi khi kiểm tra/tạo dữ liệu mẫu: {e}")
-            # Không dừng ứng dụng, chỉ cảnh báo
         
     def show_login(self):
         """Hiển thị màn hình đăng nhập"""
@@ -110,8 +111,8 @@ class AttendanceApp:
             self.open_student_dashboard()
     
     def open_teacher_dashboard(self):
-        """Mở dashboard giáo viên"""
-        from gui.teacher_window import TeacherWindow
+        """Mở dashboard giảng viên"""
+        from views.teacher_window import TeacherWindow
         
         if self.current_window:
             self.current_window.destroy()
@@ -122,7 +123,7 @@ class AttendanceApp:
     
     def open_moderator_dashboard(self):
         """Mở dashboard kiểm duyệt"""
-        from gui.moderator_window import ModeratorWindow
+        from views.moderator_window import ModeratorWindow
         
         if self.current_window:
             self.current_window.destroy()
@@ -133,7 +134,7 @@ class AttendanceApp:
     
     def open_student_dashboard(self):
         """Mở dashboard sinh viên"""
-        from gui.student_window import StudentWindow
+        from views.student_window import StudentWindow
         
         if self.current_window:
             self.current_window.destroy()

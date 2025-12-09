@@ -1,0 +1,321 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    ARCHITECTURE v3.0 - VISUAL DIAGRAM
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              VIEW LAYER (UI)                                │
+│                                                                             │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │    Login     │  │   Student    │  │   Teacher    │  │  Moderator   │  │
+│  │    Window    │  │    Window    │  │    Window    │  │    Window    │  │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  │
+│         │                 │                  │                  │           │
+└─────────┼─────────────────┼──────────────────┼──────────────────┼───────────┘
+          │                 │                  │                  │
+          ▼                 ▼                  ▼                  ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         CONTROLLER LAYER (Adapters)                         │
+│                                                                             │
+│  ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────┐ │
+│  │   AuthController     │  │  StudentController   │  │ TeacherController│ │
+│  │                      │  │                      │  │                  │ │
+│  │ • login()            │  │ • get_enrolled_      │  │ • get_my_        │ │
+│  │ • change_password()  │  │   classes()          │  │   classes()      │ │
+│  │ • reset_password()   │  │ • register_class()   │  │ • create_class() │ │
+│  │                      │  │ • get_attendance_    │  │ • mark_          │ │
+│  │                      │  │   statistics()       │  │   attendance()   │ │
+│  └──────────┬───────────┘  └──────────┬───────────┘  └─────────┬────────┘ │
+│             │                         │                         │          │
+└─────────────┼─────────────────────────┼─────────────────────────┼──────────┘
+              │                         │                         │
+              ▼                         ▼                         ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       SERVICE LAYER (Business Logic)                        │
+│                                                                             │
+│  ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────┐ │
+│  │    AuthService       │  │   StudentService     │  │  TeacherService  │ │
+│  │                      │  │                      │  │                  │ │
+│  │ • login()            │  │ • get_enrolled_      │  │ • get_my_        │ │
+│  │ • change_password()  │  │   classes()          │  │   classes()      │ │
+│  │ • check_permission() │  │ • register_class()   │  │ • create_class() │ │
+│  │                      │  │   (with validation)  │  │ • mark_          │ │
+│  │                      │  │ • get_attendance_    │  │   attendance()   │ │
+│  │                      │  │   statistics()       │  │ • get_class_     │ │
+│  │                      │  │   (with calculation) │  │   statistics()   │ │
+│  └──────────┬───────────┘  └──────────┬───────────┘  └─────────┬────────┘ │
+│             │                         │                         │          │
+└─────────────┼─────────────────────────┼─────────────────────────┼──────────┘
+              │                         │                         │
+              ▼                         ▼                         ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     REPOSITORY LAYER (Data Access)                          │
+│                                                                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
+│  │   User   │  │ Student  │  │ Teacher  │  │  Class   │  │Attendance│    │
+│  │   Repo   │  │   Repo   │  │   Repo   │  │   Repo   │  │   Repo   │    │
+│  │          │  │          │  │          │  │          │  │          │    │
+│  │ • create │  │ • create │  │ • create │  │ • create │  │ • mark   │    │
+│  │ • get_by │  │ • get_by │  │ • get_by │  │ • get_by │  │ • get_by │    │
+│  │   _id    │  │   _code  │  │   _code  │  │   _code  │  │   _sess  │    │
+│  │ • update │  │ • list_  │  │ • list_  │  │ • enroll │  │ • get_   │    │
+│  │ • delete │  │   by_    │  │   all    │  │   _stud  │  │   stats  │    │
+│  │ • auth   │  │   class  │  │ • get_   │  │ • is_    │  │          │    │
+│  │   entic  │  │ • get_   │  │   class  │  │   full   │  │          │    │
+│  │   ate    │  │   enrol  │  │   es     │  │          │  │          │    │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘    │
+│       │             │             │             │             │           │
+└───────┼─────────────┼─────────────┼─────────────┼─────────────┼───────────┘
+        │             │             │             │             │
+        └─────────────┴─────────────┴─────────────┴─────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          DATABASE LAYER                                     │
+│                                                                             │
+│  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐  │
+│  │ users  │  │students│  │teachers│  │classes │  │ class_ │  │attend- │  │
+│  │        │  │        │  │        │  │        │  │ enroll │  │ ance   │  │
+│  └────────┘  └────────┘  └────────┘  └────────┘  └────────┘  └────────┘  │
+│                                                                             │
+│                         MySQL / MariaDB                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            DATA FLOW EXAMPLE
+═══════════════════════════════════════════════════════════════════════════════
+
+Example: Student đăng ký lớp học
+
+1. VIEW LAYER (StudentWindow)
+   ↓
+   User clicks "Đăng ký" button
+   ↓
+   
+2. CONTROLLER LAYER (StudentController)
+   ↓
+   student_controller.register_class(student_id=1, class_id=5)
+   ↓
+   Validate input (student_id, class_id not null)
+   ↓
+   
+3. SERVICE LAYER (StudentService)
+   ↓
+   student_service.register_class(student_id=1, class_id=5)
+   ↓
+   Business Logic:
+   - Check student exists (via student_repo)
+   - Check class exists and approved (via class_repo)
+   - Check class not full (via class_repo)
+   - Check not already enrolled (via class_repo)
+   ↓
+   
+4. REPOSITORY LAYER (ClassRepository)
+   ↓
+   class_repo.enroll_student(class_id=5, student_id=1)
+   ↓
+   SQL: INSERT INTO class_enrollments (class_id, student_id) VALUES (5, 1)
+   ↓
+   
+5. DATABASE LAYER
+   ↓
+   Execute SQL query
+   ↓
+   Return result
+   ↓
+   
+6. BACK TO VIEW
+   ↓
+   Controller returns: {'success': True, 'message': 'Đăng ký thành công'}
+   ↓
+   View displays: messagebox.showinfo("Thành công", "Đăng ký thành công")
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                         DEPENDENCY INJECTION
+═══════════════════════════════════════════════════════════════════════════════
+
+AppContainer (Dependency Injection Container)
+│
+├─ Database (db)
+│
+├─ Repositories
+│  ├─ UserRepository(db)
+│  ├─ StudentRepository(db)
+│  ├─ TeacherRepository(db)
+│  ├─ ClassRepository(db)
+│  └─ AttendanceRepository(db)
+│
+├─ Services
+│  ├─ AuthService(user_repo, student_repo, teacher_repo)
+│  ├─ StudentService(student_repo, class_repo, attendance_repo)
+│  └─ TeacherService(teacher_repo, class_repo, student_repo, attendance_repo)
+│
+└─ Controllers
+   ├─ AuthController(auth_service)
+   ├─ StudentController(student_service)
+   └─ TeacherController(teacher_service)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                         ERROR HANDLING FLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+View calls Controller
+    ↓
+Controller calls Service (in try-catch)
+    ↓
+Service calls Repository
+    ↓
+Repository executes SQL
+    ↓
+    ├─ Success → Return data
+    │   ↓
+    │   Service processes data
+    │   ↓
+    │   Controller returns {'success': True, 'data': result}
+    │   ↓
+    │   View displays success message
+    │
+    └─ Error → Raise Exception
+        ↓
+        Service catches exception
+        ↓
+        Raise custom exception (ValidationException, NotFoundException, etc.)
+        ↓
+        Controller catches exception
+        ↓
+        Controller returns {'success': False, 'error': error_message}
+        ↓
+        View displays error message
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                         TESTING STRATEGY
+═══════════════════════════════════════════════════════════════════════════════
+
+Unit Tests (Mock dependencies)
+│
+├─ Repository Tests
+│  └─ Mock: Database connection
+│     Test: SQL queries, CRUD operations
+│
+├─ Service Tests
+│  └─ Mock: Repositories
+│     Test: Business logic, validation, calculations
+│
+└─ Controller Tests
+   └─ Mock: Services
+      Test: Input validation, error handling, response format
+
+Integration Tests (Real dependencies)
+│
+└─ End-to-End Tests
+   └─ Real: Database, Repositories, Services, Controllers
+      Test: Complete user flows (login, register, attendance)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                         FILE STRUCTURE
+═══════════════════════════════════════════════════════════════════════════════
+
+face-attendance-desktop/
+│
+├── app/                          # New architecture
+│   ├── __init__.py
+│   ├── example_integration.py    # Usage examples
+│   │
+│   ├── repositories/             # Data Access Layer
+│   │   ├── __init__.py
+│   │   ├── base_repository.py
+│   │   ├── user_repository.py
+│   │   ├── student_repository.py
+│   │   ├── teacher_repository.py
+│   │   ├── class_repository.py
+│   │   └── attendance_repository.py
+│   │
+│   ├── services/                 # Business Logic Layer
+│   │   ├── __init__.py
+│   │   ├── auth_service.py
+│   │   ├── student_service.py
+│   │   └── teacher_service.py
+│   │
+│   ├── controllers/              # Presentation Layer
+│   │   ├── __init__.py
+│   │   ├── auth_controller.py
+│   │   ├── student_controller.py
+│   │   └── teacher_controller.py
+│   │
+│   ├── utils/                    # Utilities
+│   │   ├── __init__.py
+│   │   └── exceptions.py
+│   │
+│   ├── config/                   # Configuration (TODO)
+│   ├── views/                    # UI Components (TODO)
+│   │   └── dialogs/
+│   └── tests/                    # Tests (TODO)
+│       ├── unit/
+│       └── integration/
+│
+├── models/                       # Old architecture (keep for now)
+│   ├── database.py
+│   ├── user.py
+│   ├── student.py
+│   └── teacher.py
+│
+├── views/                        # UI (to be refactored)
+│   ├── login_window.py
+│   ├── student_window.py
+│   ├── teacher_window.py
+│   └── moderator_window.py
+│
+├── controllers/                  # Old controllers (deprecated)
+├── services/                     # Old services (deprecated)
+├── utils/                        # Utilities
+│
+├── main.py                       # Entry point (to be updated)
+├── config.py                     # Configuration
+├── requirements.txt              # Dependencies
+│
+└── Documentation/
+    ├── README.txt
+    ├── FEATURES_SUMMARY.md
+    ├── REFACTOR_GUIDE.md
+    ├── MIGRATION_GUIDE.md
+    ├── ARCHITECTURE_V3_SUMMARY.md
+    ├── IMPLEMENTATION_CHECKLIST.md
+    └── ARCHITECTURE_DIAGRAM.txt (this file)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                         KEY PRINCIPLES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. SINGLE RESPONSIBILITY
+   - Each class has ONE job
+   - Repository: Data access only
+   - Service: Business logic only
+   - Controller: Adapter only
+
+2. DEPENDENCY INJECTION
+   - Dependencies passed via constructor
+   - Easy to mock for testing
+   - Loose coupling
+
+3. SEPARATION OF CONCERNS
+   - UI logic in Views
+   - Business logic in Services
+   - Data access in Repositories
+   - No SQL in Views or Controllers
+
+4. ERROR HANDLING
+   - Custom exceptions for each error type
+   - Consistent error response format
+   - Try-catch at Controller layer
+
+5. TESTABILITY
+   - Mock dependencies for unit tests
+   - Real dependencies for integration tests
+   - Clear interfaces for mocking
+
+═══════════════════════════════════════════════════════════════════════════════

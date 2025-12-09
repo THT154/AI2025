@@ -22,9 +22,8 @@ wheels/
 
 # Virtual Environment
 venv/
-env/
 ENV/
-.venv
+env/
 
 # IDE
 .vscode/
@@ -33,37 +32,30 @@ ENV/
 *.swo
 *~
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Model files (có thể bỏ comment nếu muốn share model)
-# models/*.yml
-# models/*.pkl
-
-# Uploads (ảnh sinh viên - không nên share)
-uploads/face_images/*/
-!uploads/face_images/.gitkeep
-
-# Excel files
-*.xlsx
-*.xls
-~$*.xlsx
-~$*.xls
-
-# Logs
-*.log
-
 # OS
 .DS_Store
 Thumbs.db
 desktop.ini
 
+# Project specific
+uploads/
+*.xlsx
+*.xls
+*.log
+
+# Database
+*.sql
+*.db
+*.sqlite
+
 # Temporary files
 *.tmp
 *.bak
-*.swp
+*.old
 
-# Config (nếu có thông tin nhạy cảm)
-# config.py
+# Models
+models/*.yml
+models/*.pkl
+!models/__init__.py
+!models/database.py
+!models/user.py

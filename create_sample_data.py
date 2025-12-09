@@ -1,5 +1,5 @@
 # create_sample_data.py - Tạo dữ liệu mẫu cho hệ thống
-from database import Database
+from models.database import Database
 from datetime import datetime, timedelta, date
 import random
 
